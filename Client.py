@@ -4,7 +4,7 @@ import os
 import threading
 import customtkinter as ctk
 
-from tkinter import filedialog, scrolledtext, messagebox, Menu, PhotoImage
+from tkinter import filedialog, messagebox, Menu, PhotoImage
 from datetime import datetime
 from database import register_client, login_client, save_file_info, get_client_files
 from PIL import Image, ImageTk
@@ -20,32 +20,32 @@ def show_registration_login():
     reg_login_window = ctk.CTkToplevel()
     reg_login_window.title("Login / Register")
     reg_login_window.geometry("300x420")
-    #icon
+    
     reg_login_window.iconbitmap('icons/client_icon.ico')  
       
     reg_login_window.resizable(False, False)
     reg_login_window.grab_set()
     reg_login_window.protocol("WM_DELETE_WINDOW", lambda: exit_app())
 
-        # إنشاء إطار مخصص كعنوان
+       
     title_frame = ctk.CTkFrame(reg_login_window, height=40, fg_color="#2E86C1")
     title_frame.pack(fill="x")
 
-    # إضافة نص مخصص كعنوان
+
     title_label = ctk.CTkLabel(title_frame, text="WELLCOME", font=("Courier New", 22, "bold"))
     title_label.pack(pady=20)
     
-    # Username field
+   
     ctk.CTkLabel(reg_login_window, text="Username:", font=("courier new", 14)).place(x=30, y=100)
     username_entry = ctk.CTkEntry(reg_login_window, font=("Courier New", 14), width=200)
     username_entry.place(x=30, y=130)
 
-    # Password field
+
     ctk.CTkLabel(reg_login_window, text="Password:", font=("Courier New", 14)).place(x=30, y=170)
     password_entry = ctk.CTkEntry(reg_login_window, show="*", font=("Courier New", 14), width=200)
     password_entry.place(x=30, y=200)
 
-    # Confirm Password field (hidden by default)
+  
     confirm_password_label = ctk.CTkLabel(reg_login_window, text="Confirm Password:", font=("Courier New", 14))
     confirm_password_entry = ctk.CTkEntry(reg_login_window, show="*", font=("Courier New", 14), width=200)
     confirm_password_label.place(x=30, y=240)
@@ -53,34 +53,34 @@ def show_registration_login():
     confirm_password_label.place_forget()  
     confirm_password_entry.place_forget() 
 
-    # Register mode toggle
+    
     register_mode = ctk.BooleanVar(value=False)
 
     def toggle_mode():
         """Toggle between login and registration mode"""
         if register_mode.get():
-            # Show confirm password field
+           
             confirm_password_label.place(x=30, y=240)
             confirm_password_entry.place(x=30, y=270)
-            # Change button text to "Register"
+         
             proceed_button.configure(text="Register")
         else:
-            # Hide confirm password field
+         
             confirm_password_label.place_forget()
             confirm_password_entry.place_forget()
-            # Change button text to "Login"
+           
             proceed_button.configure(text="Login")
 
     ctk.CTkCheckBox(reg_login_window, text="Register as a new user", variable=register_mode, command=toggle_mode,
                     font=("Courier New", 14)).place(x=30, y=320)
 
     def proceed():
-        """Validate user input and proceed with login or registration"""
+      
         username = username_entry.get().strip()
         password = password_entry.get().strip()
 
         global client_id
-        if register_mode.get():  # Registration mode
+        if register_mode.get():  
             confirm_password = confirm_password_entry.get().strip()
             if password != confirm_password:
                 messagebox.showerror("Error", "Passwords do not match")
@@ -88,7 +88,7 @@ def show_registration_login():
             if register_client(username, password):
                 messagebox.showinfo("Success", "Registration successful")
                 client_id = login_client(username, password)
-                # Auto-fill fields after successful registration
+                
                 username_entry.delete(0, ctk.END)
                 username_entry.insert(0, username)
                 password_entry.delete(0, ctk.END)
@@ -96,7 +96,7 @@ def show_registration_login():
             else:
                 messagebox.showerror("Error", "Username already exists")
                 return
-        else:  # Login mode
+        else:
             client_id = login_client(username, password)
             if not client_id:
                 messagebox.showerror("Error", "Invalid username or password")
@@ -105,11 +105,11 @@ def show_registration_login():
         reg_login_window.destroy()
         root.deiconify()
 
-    # Proceed button (initially set to "Login")
+    
     proceed_button = ctk.CTkButton(reg_login_window, text="Login", command=proceed, font=("Courier New", 14), width=100)
     proceed_button.place(x=150, y=360)
 
-    # Cancel button (close the application)
+    
     ctk.CTkButton(reg_login_window, text="Cancel", command=lambda: [reg_login_window.destroy(), root.destroy()], 
                   font=("Courier New", 14), width=100, hover_color="#f87306" ,fg_color="#FF5733").place(x=30, y=360)
 def try_connect(): 
@@ -124,7 +124,7 @@ def try_connect():
             log_message("✅ Connected to the server!", "green")
             enable_buttons(True)
             
-            # ✅ **التحقق مما إذا كان العميل قد سجل الدخول بالفعل**
+            
             if client_id is None:
                 show_registration_login()
             
@@ -159,7 +159,7 @@ def show_my_files(client_id):
     files_window = ctk.CTkToplevel(root)
     files_window.title("My Files")
     files_window.geometry("550x300")
-    #icon
+    
     files_window.iconbitmap("icons/client_icon.ico")
     
     files_window.lift() 
@@ -167,7 +167,7 @@ def show_my_files(client_id):
     files_window.grab_set()  
    
    
-    # عنصر ScrolledText لعرض الملفات
+    
     files_text = ctk.CTkTextbox(files_window, width=520, height=280, wrap="word", font=("Courier New", 13))
     files_text.pack(pady=10)
 
@@ -257,13 +257,13 @@ def send_text():
         try:
             send_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
-            # ✅ إرسال الرسالة مع client_id
+           
             formatted_message = f"{client_id}:{message}"
             client_socket.send(formatted_message.encode('utf-8'))
 
             log_message(f"📤 {send_time} | Sent: {message}", "green")
             
-            # ✅ لا نقوم بحفظ الرسالة هنا، بل يتم حفظها في السيرفر
+           
             text_input.delete(0, ctk.END)
             
         except Exception as e:
@@ -334,7 +334,7 @@ def clear_log():
     messages_text.delete("1.0", "end")
     messages_text.configure(state="disabled")
 
-# إنشاء واجهة المستخدم
+
 root = ctk.CTk()
 root.withdraw() 
 root.title("TCP Client")
@@ -344,7 +344,7 @@ root.configure(bg="#f0f0f0")
 root.iconbitmap("icons/client_icon.ico")
 
 
-# إضافة قائمة
+
 menu_bar = Menu(root)
 root.config(menu=menu_bar)
 
@@ -373,11 +373,11 @@ connect_button.pack(side="left", padx=5)
 disconnect_button = ctk.CTkButton(button_frame, text="Disconnect", state="disabled", command=disconnect_from_server, hover_color="#f87306" , fg_color="#f44336", text_color="white")
 disconnect_button.pack(side="left", padx=5)
 
-# إعادة ترتيب العناصر في واجهة العميل
+
 text_input_frame = ctk.CTkFrame(root)
 text_input_frame.pack(pady=5)
 
-# مربع النص وزر Send text في نفس السطر
+
 text_input = ctk.CTkEntry(text_input_frame, width=250, font=("Courier New", 12), placeholder_text="Enter text to send....")
 text_input.pack(side="left", padx=5)
 text_input.bind("<Return>", lambda event: send_text())
@@ -385,7 +385,7 @@ text_input.bind("<Return>", lambda event: send_text())
 send_text_button = ctk.CTkButton(text_input_frame, text="Send text", state="disabled", command=send_text, hover_color="#f87306" , fg_color="#008CBA", text_color="white", width=65)
 send_text_button.pack(side="left", padx=5)
 
-# زر Send file أسفل منهما
+
 send_file_frame = ctk.CTkFrame(root)
 send_file_frame.pack(pady=10)
 

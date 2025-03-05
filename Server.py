@@ -78,7 +78,7 @@ def handle_client(client_socket, address):
                 save_file_info(client_id, file_name, file_size, receive_time)
                 client_socket.send("FILE_RECEIVED".encode('utf-8'))
 
-            else:  # معالجة الرسائل النصية
+            else: 
                 try:
                     client_id, message = decoded_data.split(":", 1)
                     client_id = int(client_id)
@@ -201,7 +201,7 @@ def clear_log():
     log_area.delete("1.0", "end")
     log_area.configure(state="disabled")
 
-# إنشاء واجهة المستخدم
+
 root = ctk.CTk()
 root.title("TCP Server")
 root.geometry("500x500")  

@@ -3,7 +3,7 @@ import threading
 import os
 import customtkinter as ctk
 
-from tkinter import scrolledtext, messagebox, Menu, PhotoImage
+from tkinter import  messagebox, Menu, PhotoImage
 from datetime import datetime
 from database import save_file_info, get_username_by_id
 
@@ -210,7 +210,6 @@ root.configure(bg="#f0f0f0")
 root.iconbitmap("icons/server_icon.ico")
 
 
-# إضافة قائمة
 menu_bar = Menu(root)
 root.config(menu=menu_bar)
 
@@ -238,7 +237,7 @@ start_button.pack(side="left", padx=5)
 stop_button = ctk.CTkButton(button_frame, text="Stop server", command=stop_server, hover_color="#f87306", fg_color="#f44336", text_color="white", state="disabled",width=80, height=30)
 stop_button.pack(side="left", padx=5)
 
-# زيادة حجم حقل العرض
+
 log_area = ctk.CTkTextbox(root, width=450, height=300, state="disabled", wrap="word", font=("courier new", 12))
 log_area.pack(pady=10)
 log_area.tag_config("red", foreground="red")

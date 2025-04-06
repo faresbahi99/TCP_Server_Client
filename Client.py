@@ -7,7 +7,6 @@ import customtkinter as ctk
 from tkinter import filedialog, messagebox, Menu, PhotoImage
 from datetime import datetime
 from database import register_client, login_client, save_file_info, get_client_files
-from PIL import Image, ImageTk
 
 client_id = None 
 client_socket = None
@@ -57,7 +56,7 @@ def show_registration_login():
     register_mode = ctk.BooleanVar(value=False)
 
     def toggle_mode():
-        """Toggle between login and registration mode"""
+        
         if register_mode.get():
            
             confirm_password_label.place(x=30, y=240)

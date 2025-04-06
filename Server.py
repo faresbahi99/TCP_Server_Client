@@ -3,7 +3,7 @@ import threading
 import os
 import customtkinter as ctk
 
-from tkinter import  messagebox, Menu, PhotoImage
+from tkinter import  messagebox, Menu
 from datetime import datetime
 from database import save_file_info, get_username_by_id
 
@@ -13,9 +13,6 @@ if not os.path.exists("received_files"):
 server_socket = None
 clients = []
 server_running = True
-
-ctk.set_appearance_mode("light")  
-ctk.set_default_color_theme("green")  
 
 def handle_client(client_socket, address):
     
@@ -56,7 +53,7 @@ def handle_client(client_socket, address):
                     client_socket.send("ERROR: Invalid file size or client ID".encode('utf-8'))
                     continue
 
-                # استرجاع اسم المستخدم
+               
                 username = get_username_by_id(client_id)
                 if not username:
                     log_message(f"❌ Unauthorized file upload attempt by {address}", "red")
@@ -87,7 +84,7 @@ def handle_client(client_socket, address):
                     if username:
                         log_message(f"📩 {receive_time} | {username}: {message}", "blue")
                         
-                        # ✅ حفظ الرسالة في ملف العميل
+                       
                         save_message_to_file(username, f"{receive_time} | {message}")
 
                         client_socket.send("Message received ✅".encode('utf-8'))
@@ -138,7 +135,7 @@ def start_server():
     server_status.set("🟢 Connected")
     server_status_label.configure(text_color="green")
 
-    # تعطيل زر تشغيل السيرفر وتفعيل زر الإيقاف
+
     start_button.configure(state="disabled")
     stop_button.configure(state="normal")
 

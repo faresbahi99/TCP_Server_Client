@@ -1,7 +1,6 @@
 import sqlite3
 
 def initialize_database():
-    """تهيئة قاعدة البيانات وإنشاء الجداول إذا لم تكن موجودة"""
     conn = sqlite3.connect('client_accounts.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS clients (
@@ -18,7 +17,6 @@ def initialize_database():
     conn.close()
 
 def register_client(username, password):
-    """تسجيل مستخدم جديد"""
     conn = sqlite3.connect('client_accounts.db')
     c = conn.cursor()
     try:
@@ -31,7 +29,6 @@ def register_client(username, password):
         conn.close()
 
 def login_client(username, password):
-    """التحقق من تسجيل الدخول"""
     conn = sqlite3.connect('client_accounts.db')
     c = conn.cursor()
     c.execute("SELECT id FROM clients WHERE username = ? AND password = ?", (username, password))
@@ -40,7 +37,6 @@ def login_client(username, password):
     return client_id[0] if client_id else None
 
 def save_file_info(client_id, file_name, file_size, sent_time):
-    """حفظ معلومات الملفات المرسلة"""
     conn = sqlite3.connect('client_accounts.db')
     c = conn.cursor()
     c.execute("INSERT INTO files (client_id, file_name, file_size, sent_time) VALUES (?, ?, ?, ?)",
@@ -58,7 +54,6 @@ def get_client_files(client_id):
 
 
 def get_username_by_id(client_id):
-    """استرجاع اسم المستخدم بناءً على client_id"""
     conn = sqlite3.connect('client_accounts.db')
     c = conn.cursor()
     c.execute("SELECT username FROM clients WHERE id = ?", (client_id,))
@@ -66,5 +61,5 @@ def get_username_by_id(client_id):
     conn.close()
     return username[0] if username else None
 
-# تهيئة قاعدة البيانات عند تشغيل الملف
+
 initialize_database()
